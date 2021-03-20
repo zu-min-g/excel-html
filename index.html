@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+  <script src="js/excelHtml.min.js"></script>
+  <style type="text/css">
+    #preview table td {
+      border-top: 0.5pt solid #ddd;
+      border-left: 0.5pt solid #ddd;
+      min-width: 100px;
+    }
+    #preview table tr td:last-child {
+      border-right: 0.5pt solid #ddd;
+    }
+    #preview table tr:last-child td {
+      border-bottom: 0.5pt solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Excel 貼り付け用 HTML 生成</h1>
+    <form action="#" id="main">
+      <div>
+        <textarea id="input"  class="form-control" style="height: 200px;">
+[
+    [{ "text": "A1", "indent": 1 }, { "text": "B1", "bold": true }],
+    [{ "text": "A2", "color": "#C9211E" }, { "text": "B2", "background": "#D9E1F2" }],
+    [{ "text": "A3", "underline": true }, { "text": "B3", "underlineDouble": true }],
+    [{ "text": "A4", "border": true }, { "text": "4", "format": "0.00" }]
+]
+        </textarea>
+      </div>
+      <div class="mb-3">
+        <button type="submit" id="run" class="btn btn-primary">生成＆コピー</button>
+      </div>
+      <div>
+        <textarea id="output" class="form-control" style="height: 200px;"></textarea>
+      </div>
+      <div class="mb-3">
+        <button type="button" id="copyBtn" class="btn btn-secondary">コピー</button>
+      </div>
+      <div>
+        <div id="preview"></div>
+      </div>
+    </form>
+    <script>
+        const form = document.getElementById('main');
+        const input = document.getElementById('input');
+        const output = document.getElementById('output');
+        const preview = document.getElementById('preview');
+        const copyBtn = document.getElementById('copyBtn');
+        form.onsubmit = (event) => {
+            event.preventDefault()
+            const result = excelHtml.convert(JSON.parse(input.value))
+            output.value = result('body').html()
+            doCopy(output.value, result.html())
+            return false
+        }
+        copyBtn.onclick = (event) => {
+            doCopy(output.value, '')
+            event.preventDefault()
+        }
+        function doCopy(html, table) {
+            preview.innerHTML = table
+            excelHtml.Clipboard.copyAsHtml(html)
+        }
+    </script>
+  </div>
+</body>
+</html>
