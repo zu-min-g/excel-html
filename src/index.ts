@@ -1,4 +1,7 @@
-export * from "./formatters"
+import { Converter } from "./Converter"
+
+export * from "./Formatters"
 export * from "./Converter"
 export * from "./Clipboard"
-export { InvalidArgumentException } from "./exceptions/InvalidArgumentException"
+
+export const convert = Converter.convert

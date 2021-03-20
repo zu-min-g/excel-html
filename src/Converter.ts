@@ -1,4 +1,6 @@
-import { getFormatterByName, Formatters, formatters } from "./formatters"
+import { getFormatterByName, Formatters, formatters } from "./Formatters"
+
+import cheerio from "cheerio"
 
 export interface Hyperlink {
   label: string
@@ -20,27 +22,27 @@ export interface Cell {
   border: boolean
 }
 
-declare global {
-  interface JQuery {
-    office(method: string | Row[]): JQuery
-  }
-}
-
 export interface CallableCell {
-  (formatters: Formatters, $: JQueryStatic, parent: JQuery): void
+  (formatters: Formatters, $: cheerio.Root, parent: cheerio.Cheerio): void
 }
 
 export type Row = (Cell | CallableCell)[]
 
 export const Converter = {
-  convert: ($: JQueryStatic, data: Row[], header?: Row): JQuery => {
-    const root = $("<div><table></table></div>")
-    const table = root.find("table")
-    Converter.overwriteTable(table, data, header)
-    return root
+  convert: (data: Row[], header?: Row): cheerio.Root => {
+    const $ = cheerio.load("<table></table>")
+    const table = $("table")
+    Converter.overwriteTable(table, $, data, header)
+    return $
   },
 
-  overwriteTable(table: JQuery, data: Row[], header?: Row): void {
+  overwriteTable(
+    table: cheerio.Cheerio,
+    $: cheerio.Root,
+    data: Row[],
+    header?: Row
+  ): void {
+    table.html("")
     if (typeof header !== "undefined") {
       const tr = $("<tr>")
       tr.appendTo(table)
@@ -66,7 +68,11 @@ export const Converter = {
     })
   },
 
-  apply: (data: Cell | CallableCell, $: JQueryStatic, parent: JQuery): void => {
+  apply: (
+    data: Cell | CallableCell,
+    $: cheerio.Root,
+    parent: cheerio.Cheerio
+  ): void => {
     if (typeof data === "function") {
       data(formatters, $, parent)
       return
@@ -78,22 +84,5 @@ export const Converter = {
       }
       formatter(data[attribute], $, parent, data)
     }
-  },
-
-  register: ($: JQueryStatic): JQueryStatic => {
-    $.fn.office = function (
-      method: string | Row[],
-      param?: Row
-    ): JQuery<HTMLElement> {
-      if (typeof method === "object") {
-        return Converter.convert($, method, param)
-      } else if (typeof method === "string") {
-        if (typeof formatters[method] !== "undefined") {
-          formatters[method](param, $, <any>$, {})
-        }
-      }
-      return this
-    }
-    return $
   },
 }

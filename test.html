@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="dist/browser/main.min.js"></script>
 </head>
 <body>
@@ -14,7 +13,7 @@
 [
   [{ "text": "A2", "indent": 1, "color": "#C9211E", "background": "#D9E1F2", "bold": true }, { "text": "B2" }],
   [{ "text": "A3", "underline": true }, { "text": "B3", "border": true }],
-  [{ "text": "A4", "underlineDouble": true }, { "text": "B4" }]
+  [{ "text": "A4", "underlineDouble": true }, { "text": "4", "format": "0.00" }]
 ]
         </textarea><br>
         <button type="submit" id="run">生成＆コピー</button><br>
@@ -30,19 +29,18 @@
         const copyBtn = document.getElementById('copyBtn');
         form.onsubmit = (event) => {
             event.preventDefault()
-            main.Converter.register($)
-            const result = $.fn.office(JSON.parse(input.value))
-            output.value = result.html()
+            const result = main.convert(JSON.parse(input.value))
+            output.value = result('body').html()
             doCopy(output.value, result.html())
             return false
         }
         copyBtn.onclick = (event) => {
-          doCopy(output.value, '')
-          event.preventDefault()
+            doCopy(output.value, '')
+            event.preventDefault()
         }
         function doCopy(html, table) {
-          preview.innerHTML = table
-          main.Clipboard.copyAsHtml(html)
+            preview.innerHTML = table
+            main.Clipboard.copyAsHtml(html)
         }
     </script>
 </body>

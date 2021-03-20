@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Cell, Converter, Hyperlink } from "../Converter"
+import { Cell, Converter, Hyperlink } from "./Converter"
 
 interface Formatter<T> {
   (
     data: T,
-    root: JQueryStatic,
-    cell: JQuery,
+    root: cheerio.Root,
+    cell: cheerio.Cheerio,
     parent: { [name: string]: unknown }
   ): void
 }
