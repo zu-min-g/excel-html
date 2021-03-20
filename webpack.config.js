@@ -6,12 +6,12 @@ var env = process.env.NODE_ENV || "development"
 let config = {
   mode: env,
   entry: {
-    main: "./src/index.ts",
+    excelHtml: "./src/index.ts",
   },
   output: {
     path: path.resolve(__dirname, "dist/browser"),
     filename: "[name].js",
-    library: "main",
+    library: "excelHtml",
     libraryTarget: "var",
   },
   resolve: {
