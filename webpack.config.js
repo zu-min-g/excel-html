@@ -39,6 +39,9 @@ let config = {
   optimization: {
     minimize: false,
   },
+  externals: {
+    jquery: "jQuery",
+  },
 }
 
 if (env === "production") {
