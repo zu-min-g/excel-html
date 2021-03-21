@@ -128,3 +128,6 @@ webpack.config.js
 tsconfig.json
 .babelrc
 .editorconfig
+
+# demo page
+demo/
