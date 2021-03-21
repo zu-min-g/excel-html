@@ -14,7 +14,9 @@ export interface Formatters {
   [name: string]: Formatter<any>
   text: Formatter<string>
   html: Formatter<string>
-  indent: Formatter<string>
+  indent: Formatter<number>
+  colSpan: Formatter<number>
+  rowSpan: Formatter<number>
   color: Formatter<string>
   background: Formatter<string>
   bold: Formatter<boolean>
@@ -39,8 +41,16 @@ export const formatters: Formatters = {
   },
 
   indent: (data, _$, cell): void => {
-    cell.css("mso-char-indent-count", data)
-    cell.css("padding-left", "12px")
+    cell.css("mso-char-indent-count", data.toString())
+    cell.css("padding-left", (data * 12).toString() + "px")
+  },
+
+  colSpan: (data, _$, cell): void => {
+    cell.attr("colSpan", data.toString())
+  },
+
+  rowSpan: (data, _$, cell): void => {
+    cell.attr("rowSpan", data.toString())
   },
 
   color: (data, $, cell): void => {

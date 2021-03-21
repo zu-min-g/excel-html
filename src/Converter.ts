@@ -11,7 +11,9 @@ export interface Cell {
   [name: string]: unknown
   text?: string
   html?: string
-  indent?: string
+  indent?: number
+  colSpan?: number
+  rowSpan?: number
   color?: string
   background?: string
   bold?: boolean
@@ -19,7 +21,7 @@ export interface Cell {
   group?: Cell[]
   format?: string
   hyperlink?: Hyperlink
-  border: boolean
+  border?: boolean
 }
 
 export interface CallableCell {
@@ -78,6 +80,9 @@ export const Converter = {
       return
     }
     for (const attribute in data) {
+      if (typeof data[attribute] === "undefined") {
+        continue
+      }
       const formatter = getFormatterByName(attribute)
       if (formatter === null) {
         continue
